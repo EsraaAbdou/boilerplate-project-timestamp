@@ -24,7 +24,20 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+app.get("/api/timestamp/:date", (req, res) => {
+  // console.log(req.params.date)
+  const dateArr = req.params.date.split("-");
+  let timestamp, dateObj;
+  if(dateArr.length === 1) {
+    timestamp = parseInt(req.params.date);
+    dateObj = new Date(timestamp);
+  } 
+  else if (dateArr.length === 3) {
+    dateObj = new Date(dateArr[0], parseInt(dateArr[1]) - 1, dateArr[2]);
+    timestamp = dateObj.getTime();
+  }
+  res.json({"unix": timestamp, "utc": dateObj.toUTCString()});
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
